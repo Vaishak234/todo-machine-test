@@ -1,6 +1,7 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
 import { useFormik } from 'formik';
+import * as Yup from 'yup'; // Import Yup
 import { v4 as uuidv4 } from 'uuid';
 import { addTodo, editTodo } from '../redux/slice/todoSlice';
 import { X } from 'lucide-react';
@@ -10,10 +11,20 @@ const AddTodo = ({ onClose, editValues = null, isEdit = false }) => {
 
     const initialValues = editValues || {
         id: uuidv4(),
-        name: editValues?.name ||'',
+        name: editValues?.name || '',
         description: editValues?.description || '',
-        status: editValues?.status ||'completed',
+        status: editValues?.status || 'completed',
     };
+
+    // Define the validation schema
+    const validationSchema = Yup.object({
+        name: Yup.string()
+            .required('Todo Name is required')
+            .min(3, 'Todo Name must be at least 3 characters long'),
+        description: Yup.string()
+            .required('Description is required')
+            .min(5, 'Description must be at least 5 characters long'),
+    });
 
     const onSubmit = (values, { resetForm }) => {
         if (isEdit) {
@@ -27,6 +38,7 @@ const AddTodo = ({ onClose, editValues = null, isEdit = false }) => {
 
     const formik = useFormik({
         initialValues,
+        validationSchema, // Add the validation schema here
         validateOnBlur: true,
         validateOnChange: true,
         onSubmit,

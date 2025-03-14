@@ -29,6 +29,9 @@ const todoSlice = createSlice({
             state.todos[index] = action.payload;
             localStorage.setItem('todos', JSON.stringify(state.todos));
         },
+        updateTodos:(state,action)=>{
+            state.todos=action.payload;
+        }
     }
 });
 
@@ -39,6 +42,6 @@ export const selectFilteredTodos = createSelector(
     (todos, filter) => todos?.filter((todo) => todo.status === filter)
 );
 
-export const { addTodo, editTodo, removeTodo } = todoSlice.actions;
+export const { addTodo, editTodo, removeTodo,updateTodos } = todoSlice.actions;
 
 export default todoSlice.reducer;
